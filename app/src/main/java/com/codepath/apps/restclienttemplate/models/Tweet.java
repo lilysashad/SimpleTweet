@@ -6,18 +6,39 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
+import androidx.room.ForeignKey;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
+@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns ="id", childColumns = "userId"))
 public class Tweet {
 
-    public String body;
-
-    public String createdAt;
-
+    @PrimaryKey
+    @ColumnInfo
     public long id;
 
+    @ColumnInfo
+    public String body;
+
+    @ColumnInfo
+    public String createdAt;
+
+    @ColumnInfo
+    public long userId;
+
+    @Ignore
     public User user;
+
+    //empty constructor needed by Parceler library
+    public Tweet(){}
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
 
@@ -29,7 +50,11 @@ public class Tweet {
 
         tweet.id = jsonObject.getLong("id");
 
-        tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        User user = User.fromJson(jsonObject.getJSONObject("user"));
+
+        tweet.user = user;
+
+        tweet.userId = user.id;
 
         return tweet;
 

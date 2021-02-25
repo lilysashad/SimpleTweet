@@ -52,6 +52,14 @@ public class TweetClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	public void publishTweet(String tweetContent, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("status", tweetContent); //specifies # of records to retrieve
+		client.post(apiUrl, params, "", handler);
+	}
+
 	public void getNextPageOfTweets(JsonHttpResponseHandler handler, long maxId) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
